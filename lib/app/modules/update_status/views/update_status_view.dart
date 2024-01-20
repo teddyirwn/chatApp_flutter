@@ -24,7 +24,7 @@ class UpdateStatusView extends GetView<UpdateStatusController> {
             ),
           ),
           title: const Text(
-            'Update Status',
+            'Bio',
             style: TextStyle(
               color: Colors.white,
             ),
@@ -42,7 +42,7 @@ class UpdateStatusView extends GetView<UpdateStatusController> {
                   authC.updateStatus(controller.statusC.text);
                 },
                 decoration: InputDecoration(
-                  hintText: "Input status here...",
+                  hintText: "Input Bio here...",
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 30,
                     vertical: 18,

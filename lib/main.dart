@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Obx(() => GetMaterialApp(
                 debugShowCheckedModeBanner: false,
-                title: "Application",
+                title: "Chattoapps",
                 initialRoute: authC.isSkipIntro.isTrue
                     ? authC.isAuth.isTrue
                         ? Routes.HOME
@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
                 getPages: AppPages.routes,
               ));
         }
+        print(authC.userCredential);
         return FutureBuilder(
           future: authC.firstInitializes(),
           builder: (context, snapshot) => SplashScreen(),

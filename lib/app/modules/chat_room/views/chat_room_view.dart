@@ -36,45 +36,73 @@ class ChatRoomView extends GetView<ChatRoomController> {
                 if (snapshot.connectionState == ConnectionState.active) {
                   var dataFriend =
                       snapshot.data!.data() as Map<String, dynamic>;
-                  return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      radius: 25,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: dataFriend["photoUrl"] == "noimage"
-                            ? Image.asset(
-                                "assets/logo/noimage.png",
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                dataFriend["photoUrl"],
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                    ),
-                    title: Text(
-                      dataFriend["name"],
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      dataFriend["status"],
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  );
+                  return dataFriend["status"] != ""
+                      ? ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 25,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: dataFriend["photoUrl"] == "noimage"
+                                  ? Image.asset(
+                                      "assets/logo/noimage.png",
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      dataFriend["photoUrl"],
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                          title: Text(
+                            dataFriend["name"],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            dataFriend["status"],
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 25,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: dataFriend["photoUrl"] == "noimage"
+                                  ? Image.asset(
+                                      "assets/logo/noimage.png",
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      dataFriend["photoUrl"],
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                          title: Text(
+                            dataFriend["name"],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
                 }
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
-                      radius: 23,
+                      radius: 18,
                       backgroundColor: Colors.grey,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),

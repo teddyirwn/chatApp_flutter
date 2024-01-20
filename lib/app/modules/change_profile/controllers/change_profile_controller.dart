@@ -41,6 +41,7 @@ class ChangeProfileController extends GetxController {
       if (dataImage != null) {
         print(dataImage.name);
         print(dataImage.path);
+        pickedImage = dataImage;
       }
       update();
     } catch (err) {

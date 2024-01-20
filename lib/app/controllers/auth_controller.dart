@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
-  final isSkipIntro = false.obs;
-  final isAuth = false.obs;
+  var isSkipIntro = false.obs;
+  var isAuth = false.obs;
 
   GoogleSignIn _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _currentUser;
@@ -98,7 +99,6 @@ class AuthController extends GetxController {
           });
         }
         user.refresh();
-
         return true;
       }
       return false;
@@ -129,12 +129,14 @@ class AuthController extends GetxController {
         print("usercredential");
         print(userCredential);
 
-        // SIMPAN STATUS USER BAHWA SUDAH PERNAH LOGIN DAN TIDAK AKAN MENAMPULKAN INTRODUCTION KEMBALI
+        // SIMPAN STATUS USER BAHWA SUDAH PERNAH LOGIN DAN TIDAK AKAN MENAMPiLKAN INTRODUCTION KEMBALI
         final box = GetStorage();
         if (box.read("skipIntro") != null) {
           box.remove("skipIntro");
         }
         box.write("skipIntro", true);
+
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
 
         // masukan data ke firebase
         CollectionReference users = firestore.collection("users");
@@ -237,8 +239,8 @@ class AuthController extends GetxController {
     });
 
     user.refresh();
-    Get.defaultDialog(
-        title: "Update Data", middleText: "Change Profile Success");
+    Get.snackbar("Update data", "update data berhasil",
+        duration: Duration(seconds: 2));
   }
 
   void updateStatus(String status) {
@@ -261,8 +263,10 @@ class AuthController extends GetxController {
     });
 
     user.refresh();
-
-    Get.defaultDialog(title: "Success", middleText: "Update Status Success");
+    Get.snackbar("Success", "update status berhasil",
+        backgroundColor: Colors.white,
+        colorText: Colors.black,
+        duration: Duration(seconds: 2));
   }
 
   void updatePhotoUrl(String url) async {
@@ -282,8 +286,8 @@ class AuthController extends GetxController {
     });
 
     user.refresh();
-    Get.defaultDialog(
-        title: "Success", middleText: "change Photo Profile Success");
+    Get.snackbar("Success", "Foto Profile Berhasil Di update",
+        duration: Duration(seconds: 2));
   }
 
 //  SEARCH

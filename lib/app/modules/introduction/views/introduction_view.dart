@@ -16,7 +16,7 @@ class IntroductionView extends GetView<IntroductionController> {
       pages: [
         PageViewModel(
           title: "Berinteraksi Dengan Mudah",
-          body: "Chatt Appp",
+          body: "Chattoapps",
           image: Container(
             width: MediaQuery.of(context).size.width * 0.6,
             height: MediaQuery.of(context).size.width * 0.6,
@@ -26,19 +26,8 @@ class IntroductionView extends GetView<IntroductionController> {
           ),
         ),
         PageViewModel(
-          title: "Temukan Teman Barumu Dengan Chat app",
-          body: "Chatt Appp",
-          image: Container(
-            width: MediaQuery.of(context).size.width * 0.6,
-            height: MediaQuery.of(context).size.width * 0.6,
-            child: Center(
-              child: Lottie.asset("assets/lottie/ojek.json"),
-            ),
-          ),
-        ),
-        PageViewModel(
-          title: "Aplikasi Chat app",
-          body: "Chatt Appp",
+          title: "Temukan Teman Barumu Dengan  Chattoapps",
+          body: "Chattoapps",
           image: Container(
             width: MediaQuery.of(context).size.width * 0.6,
             height: MediaQuery.of(context).size.width * 0.6,
@@ -65,7 +54,6 @@ class IntroductionView extends GetView<IntroductionController> {
       next: const Text("Next"),
       done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w700)),
       onDone: () => Get.offAllNamed(Routes.LOGIN),
-     
     ));
   }
 }

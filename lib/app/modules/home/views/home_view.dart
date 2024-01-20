@@ -23,7 +23,7 @@ class HomeView extends GetView<HomeController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Chat",
+                    "Chattoapps",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -181,9 +181,7 @@ class HomeView extends GetView<HomeController> {
                                                   ),
                                       );
                               }
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
+                              return const SizedBox.shrink();
                             });
                       },
                     );

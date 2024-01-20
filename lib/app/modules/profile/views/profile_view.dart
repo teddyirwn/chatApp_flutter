@@ -35,24 +35,26 @@ class ProfileView extends GetView<ProfileController> {
                   endRadius: 100,
                   glowColor: const Color.fromRGBO(0, 0, 0, 1),
                   duration: Duration(seconds: 2),
-                  child: Obx(() => Container(
-                        margin: EdgeInsets.all(15),
-                        width: 150,
-                        height: 150,
-                        child: authC.user.value.photoUrl == "noimage"
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.asset(
-                                  "assets/logo/noimage.png",
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.network(authC.user.value.photoUrl!,
-                                    fit: BoxFit.cover),
+                  child: Obx(
+                    () => Container(
+                      margin: EdgeInsets.all(15),
+                      width: 120,
+                      height: 120,
+                      child: authC.user.value.photoUrl == "noimage"
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.asset(
+                                "assets/logo/noimage.png",
+                                fit: BoxFit.cover,
                               ),
-                      )),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.network(authC.user.value.photoUrl!,
+                                  fit: BoxFit.cover),
+                            ),
+                    ),
+                  ),
                 ),
                 Obx(() => Text(
                       "${authC.user.value.name!}",
@@ -84,7 +86,7 @@ class ProfileView extends GetView<ProfileController> {
                       size: 35,
                     ),
                     title: const Text(
-                      "Update Status",
+                      "Bio",
                       style: TextStyle(
                         fontSize: 22,
                       ),
