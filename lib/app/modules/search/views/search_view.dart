@@ -104,12 +104,16 @@ class SearchView extends GetView<search.SearchController> {
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                     subtitle: Text(
                       "${controller.tempSearch[index]["email"]}",
                       style: const TextStyle(
                         fontSize: 16,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                     trailing: GestureDetector(
                       onTap: () => authC.addNewConnection(

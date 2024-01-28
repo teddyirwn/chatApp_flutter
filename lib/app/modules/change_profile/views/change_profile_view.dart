@@ -3,14 +3,12 @@ import 'dart:io';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-
 import '../controllers/change_profile_controller.dart';
 
 class ChangeProfileView extends GetView<ChangeProfileController> {
   final authC = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     controller.emailC.text = authC.user.value.email!;
@@ -58,25 +56,32 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                 endRadius: 75,
                 glowColor: Colors.black,
                 duration: Duration(seconds: 2),
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(bottom: 15),
-                  width: 120,
-                  height: 120,
-                  child: authC.user.value.photoUrl == "noimage"
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.asset(
-                            "assets/logo/noimage.png",
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.network(authC.user.value.photoUrl!,
-                              fit: BoxFit.cover),
-                        ),
-                ),
+                child: Obx(() => Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(bottom: 15),
+                      width: 120,
+                      height: 120,
+                      child: authC.user.value.photoUrl == "noimage"
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.asset(
+                                "assets/logo/noimage.png",
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(120),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                          authC.user.value.photoUrl!,
+                                        ),
+                                        fit: BoxFit.cover)),
+                              ),
+                            ),
+                    )),
               ),
               TextField(
                 controller: controller.emailC,
@@ -133,7 +138,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                   );
                 },
                 decoration: InputDecoration(
-                  label: const Text("Status"),
+                  label: const Text("Bio"),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 30,
                     vertical: 18,

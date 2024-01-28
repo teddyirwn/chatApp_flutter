@@ -1,9 +1,7 @@
 import '../../../controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -27,29 +25,33 @@ class LoginView extends GetView<LoginController> {
                 const SizedBox(
                   height: 50,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    authC.login();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      )),
-                  child: Row(
-                    children: [
-                      Image.asset("assets/logo/google.png", width: 50),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      const Text(
-                        "Sign In With Google",
-                        style: TextStyle(fontSize: 20, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                )
+                Obx(() => ElevatedButton(
+                      onPressed: () {
+                        authC.login();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          )),
+                      child: authC.isLoading.isFalse
+                          ? Row(
+                              children: [
+                                Image.asset("assets/logo/google.png",
+                                    width: 50),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                const Text(
+                                  "Sign In With Google",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                              ],
+                            )
+                          : CircularProgressIndicator(),
+                    ))
               ],
             ),
           ),

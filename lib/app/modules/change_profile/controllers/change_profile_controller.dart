@@ -39,13 +39,10 @@ class ChangeProfileController extends GetxController {
       final dataImage =
           await imagePicker.pickImage(source: ImageSource.gallery);
       if (dataImage != null) {
-        print(dataImage.name);
-        print(dataImage.path);
         pickedImage = dataImage;
       }
       update();
     } catch (err) {
-      print(err);
       pickedImage = null;
       update();
     }

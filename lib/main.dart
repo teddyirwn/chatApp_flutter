@@ -24,9 +24,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(Duration(seconds: 3)),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+      future: authC.firstInitializes(),
+      builder: (context, snapshot2) {
+        if (snapshot2.connectionState == ConnectionState.done) {
           return Obx(() => GetMaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: "Chattoapps",
@@ -38,11 +38,7 @@ class MyApp extends StatelessWidget {
                 getPages: AppPages.routes,
               ));
         }
-        print(authC.userCredential);
-        return FutureBuilder(
-          future: authC.firstInitializes(),
-          builder: (context, snapshot) => SplashScreen(),
-        );
+        return SplashScreen();
       },
     );
   }

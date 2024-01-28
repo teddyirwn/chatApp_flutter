@@ -67,119 +67,69 @@ class HomeView extends GetView<HomeController> {
                                   ConnectionState.active) {
                                 var data = snapshot2.data!.data();
 
-                                return data!['status'] == ""
-                                    ? ListTile(
-                                        onTap: () => controller.goToChatRoom(
-                                          "${allChats[index].id}",
-                                          authC.user.value.email!,
-                                          allChats[index]["connection"],
-                                        ),
-                                        leading: CircleAvatar(
-                                          backgroundColor: Colors.black26,
-                                          radius: 28,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: data['photoUrl'] == 'noimage'
-                                                ? Image.asset(
-                                                    "assets/logo/noimage.png",
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Image.network(
-                                                    data['photoUrl'],
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                return ListTile(
+                                  onTap: () => controller.goToChatRoom(
+                                    "${allChats[index].id}",
+                                    authC.user.value.email!,
+                                    allChats[index]["connection"],
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.black26,
+                                    radius: 25,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: data!['photoUrl'] == 'noimage'
+                                          ? Image.asset(
+                                              "assets/logo/noimage.png",
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network( 
+                                              data['photoUrl'],
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    "${data['name']}",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                  subtitle: StreamBuilder<
+                                          QuerySnapshot<Map<String, dynamic>>>(
+                                      stream: controller
+                                          .chatsHistory(allChats[index].id),
+                                      builder: (context, chatSnap) {
+                                        if (chatSnap.connectionState ==
+                                            ConnectionState.active) {
+                                          var chatHistory =
+                                              chatSnap.data!.docs[index].data();
+                                          return Text(
+                                            "${chatHistory['msg']}",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          );
+                                        }
+                                        return const SizedBox.shrink();
+                                      }),
+                                  trailing: allChats[index]['total_unread'] == 0
+                                      ? SizedBox()
+                                      : CircleAvatar(
+                                          radius: 15,
+                                          backgroundColor: Colors.blue.shade400,
+                                          child: Text(
+                                            "${allChats[index]['total_unread']}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                         ),
-                                        title: Text(
-                                          "${data['name']}",
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        trailing:
-                                            allChats[index]['total_unread'] == 0
-                                                ? SizedBox()
-                                                : CircleAvatar(
-                                                    radius: 15,
-                                                    backgroundColor:
-                                                        Colors.blue.shade400,
-                                                    child: Text(
-                                                      "${allChats[index]['total_unread']}",
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                      )
-                                    : ListTile(
-                                        onTap: () => controller.goToChatRoom(
-                                          "${allChats[index].id}",
-                                          authC.user.value.email!,
-                                          allChats[index]["connection"],
-                                        ),
-                                        leading: CircleAvatar(
-                                          backgroundColor: Colors.black26,
-                                          radius: 28,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: data['photoUrl'] == 'noimage'
-                                                ? Image.asset(
-                                                    "assets/logo/noimage.png",
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Image.network(
-                                                    data['photoUrl'],
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                          ),
-                                        ),
-                                        title: Text(
-                                          "${data['name']}",
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        subtitle: StreamBuilder<
-                                                QuerySnapshot<
-                                                    Map<String, dynamic>>>(
-                                            stream: controller.chatsHistory(
-                                                allChats[index].id),
-                                            builder: (context, chatSnap) {
-                                              if (chatSnap.connectionState ==
-                                                  ConnectionState.active) {
-                                                var chatHistory = chatSnap
-                                                    .data!.docs[index]
-                                                    .data();
-
-                                                return Text(
-                                                  "${chatHistory['msg']}",
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                  ),
-                                                );
-                                              }
-                                              return CircularProgressIndicator();
-                                            }),
-                                        trailing:
-                                            allChats[index]['total_unread'] == 0
-                                                ? SizedBox()
-                                                : CircleAvatar(
-                                                    radius: 15,
-                                                    backgroundColor:
-                                                        Colors.blue.shade400,
-                                                    child: Text(
-                                                      "${allChats[index]['total_unread']}",
-                                                      style: const TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                      );
+                                );
                               }
                               return const SizedBox.shrink();
                             });

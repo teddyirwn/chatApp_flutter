@@ -6,19 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
-  var isSkipIntro = false.obs;
-  var isAuth = false.obs;
+  final isSkipIntro = false.obs;
+  final isLoading = false.obs;
+  final isAuth = false.obs;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _currentUser;
   UserCredential? userCredential;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  var user = UsersModel().obs;
-  var friendUser = UsersModel().obs;
+  final user = UsersModel().obs;
+  final friendUser = UsersModel().obs;
 
   Future<void> firstInitializes() async {
     await autoLogin().then(
@@ -34,11 +34,12 @@ class AuthController extends GetxController {
         isSkipIntro.value = true;
       }
     });
+    update();
   }
 
   Future<bool> skipIntro() async {
     final box = GetStorage();
-    if (box.read("skipIntro") != null || box.read("skipIntro") == true) {
+    if (box.read("skipIntro") != null) {
       return true;
     }
     return false;
@@ -48,57 +49,65 @@ class AuthController extends GetxController {
     try {
       final isSignIn = await _googleSignIn.isSignedIn();
 
-      if (isSignIn) {
-        await _googleSignIn
-            .signInSilently()
-            .then((value) => _currentUser = value);
+      if (!isSignIn) {
+        return false;
+      }
 
-        final googleAuth = await _currentUser!.authentication;
+      await _googleSignIn
+          .signInSilently()
+          .then((value) => _currentUser = value);
 
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        await FirebaseAuth.instance
-            .signInWithCredential(credential)
-            .then((value) => userCredential = value);
+      final GoogleSignInAuthentication? googleAuth =
+          await _currentUser!.authentication;
 
-        CollectionReference users = firestore.collection("users");
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-        await users.doc(_currentUser!.email).update({
-          "lastSignInTime":
-              userCredential!.user!.metadata.lastSignInTime!.toIso8601String(),
+      await FirebaseAuth.instance
+          .signInWithCredential(credential)
+          .then((value) => userCredential = value);
+
+      CollectionReference users = firestore.collection("users");
+
+      await users.doc(_currentUser!.email).update({
+        "lastSignInTime":
+            userCredential!.user!.metadata.lastSignInTime!.toIso8601String(),
+      });
+
+      final currUser = await users.doc(_currentUser!.email).get();
+      final currUserData = currUser.data() as Map<String, dynamic>;
+
+      user(UsersModel.fromJson(currUserData));
+      user.refresh();
+      final listChats =
+          await users.doc(_currentUser!.email).collection("chats").get();
+
+      if (listChats.docs.length != 0) {
+        List<ChatsUser> dataListChats = [];
+        listChats.docs.forEach((element) {
+          var dataDocChat = element.data();
+          var dataDocChatId = element.id;
+          dataListChats.add(ChatsUser(
+            chatId: dataDocChatId,
+            connection: dataDocChat["connection"],
+            lastTime: dataDocChat["lastTime"],
+            total_unread: dataDocChat["total_unread"],
+          ));
         });
+        user.update((user) {
+          user!.chats = dataListChats;
+        });
+      } else {
+        user.update((user) {
+          user!.chats = [];
+        });
+      }
+      user.refresh();
 
-        final currUser = await users.doc(_currentUser!.email).get();
-        final currUserData = currUser.data() as Map<String, dynamic>;
-
-        user(UsersModel.fromJson(currUserData));
-        user.refresh();
-        final listChats =
-            await users.doc(_currentUser!.email).collection("chats").get();
-
-        if (listChats.docs.length != 0) {
-          List<ChatsUser> dataListChats = [];
-          listChats.docs.forEach((element) {
-            var dataDocChat = element.data();
-            var dataDocChatId = element.id;
-            dataListChats.add(ChatsUser(
-              chatId: dataDocChatId,
-              connection: dataDocChat["connection"],
-              lastTime: dataDocChat["lastTime"],
-              total_unread: dataDocChat["total_unread"],
-            ));
-          });
-          user.update((user) {
-            user!.chats = dataListChats;
-          });
-        } else {
-          user.update((user) {
-            user!.chats = [];
-          });
-        }
-        user.refresh();
+      final box = GetStorage();
+      if (box.read("isLogin") != false) {
         return true;
       }
       return false;
@@ -109,25 +118,27 @@ class AuthController extends GetxController {
 
   Future<void> login() async {
     try {
-      await _googleSignIn.signOut();
+      // await _googleSignIn.signOut();
       await _googleSignIn.signIn().then((value) => _currentUser = value);
       final isSignIn = await _googleSignIn.isSignedIn();
 
       if (isSignIn) {
+        isLoading.value = true;
         print(_currentUser);
 
-        final googleAuth = await _currentUser!.authentication;
+        final GoogleSignInAuthentication? googleAuth =
+            await _currentUser?.authentication;
+
+        print("usercredential");
+        print(googleAuth?.idToken);
 
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
         );
         await FirebaseAuth.instance
             .signInWithCredential(credential)
             .then((value) => userCredential = value);
-
-        print("usercredential");
-        print(userCredential);
 
         // SIMPAN STATUS USER BAHWA SUDAH PERNAH LOGIN DAN TIDAK AKAN MENAMPiLKAN INTRODUCTION KEMBALI
         final box = GetStorage();
@@ -135,8 +146,7 @@ class AuthController extends GetxController {
           box.remove("skipIntro");
         }
         box.write("skipIntro", true);
-
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        box.write("isLogin", true);
 
         // masukan data ke firebase
         CollectionReference users = firestore.collection("users");
@@ -194,8 +204,9 @@ class AuthController extends GetxController {
           });
         }
         user.refresh();
-
         isAuth.value = true;
+        isLoading.value = false;
+        print(isLoading);
         Get.offAllNamed(Routes.HOME);
       } else {
         print("tidak berhasil Login dengan akun:");
