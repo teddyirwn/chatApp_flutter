@@ -1,4 +1,5 @@
 import 'package:chatapp/app/controllers/auth_controller.dart';
+import 'package:chatapp/app/utils/theme/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -20,6 +21,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final authC = Get.put(AuthController(), permanent: true);
+  final GetStorage box = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,11 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot2) {
         if (snapshot2.connectionState == ConnectionState.done) {
           return Obx(() => GetMaterialApp(
+                theme: authC.mode.isTrue
+                    ? TAppTheme.darkTheme
+                    : TAppTheme.lightTheme,
+                darkTheme: TAppTheme.darkTheme,
+                themeMode: ThemeMode.system,
                 debugShowCheckedModeBanner: false,
                 title: "Chattoapps",
                 initialRoute: authC.isSkipIntro.isTrue

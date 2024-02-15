@@ -16,7 +16,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
     controller.statusC.text = authC.user.value.status ?? "";
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue.shade400,
+          backgroundColor: Get.theme.appBarTheme.backgroundColor,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -177,10 +177,12 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
-                                              image: FileImage(
-                                                File(c.pickedImage!.path),
-                                              ),
-                                            )),
+                                                image: FileImage(
+                                                  File(
+                                                    c.pickedImage!.path,
+                                                  ),
+                                                ),
+                                                fit: BoxFit.cover)),
                                       ),
                                       Positioned(
                                         top: -10,
@@ -232,7 +234,6 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade400,
                       padding: const EdgeInsets.symmetric(
                         vertical: 12,
                       ),

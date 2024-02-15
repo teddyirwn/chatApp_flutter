@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:chatapp/app/data/models/users_model.dart';
 import 'package:chatapp/app/routes/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +13,7 @@ class AuthController extends GetxController {
   final isSkipIntro = false.obs;
   final isLoading = false.obs;
   final isAuth = false.obs;
+  RxBool mode = false.obs;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _currentUser;
@@ -146,7 +149,7 @@ class AuthController extends GetxController {
           box.remove("skipIntro");
         }
         box.write("skipIntro", true);
-        box.write("isLogin", true);
+        // box.write("isLogin", true);
 
         // masukan data ke firebase
         CollectionReference users = firestore.collection("users");
@@ -209,9 +212,11 @@ class AuthController extends GetxController {
         print(isLoading);
         Get.offAllNamed(Routes.HOME);
       } else {
+        isLoading.value = false;
         print("tidak berhasil Login dengan akun:");
       }
     } catch (error) {
+      isLoading.value = false;
       print(error);
     }
   }
@@ -460,5 +465,10 @@ class AuthController extends GetxController {
       "friendEmail": friendEmail,
       "friendUserModel": friendUser.value,
     });
+  }
+
+  void toggleDark() {
+    mode.toggle();
+    GetStorage().write("darkMode", mode.value);
   }
 }

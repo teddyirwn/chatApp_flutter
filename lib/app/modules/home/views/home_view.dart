@@ -16,27 +16,30 @@ class HomeView extends GetView<HomeController> {
       body: SafeArea(
         child: Column(children: [
           Material(
+            color: Theme.of(context).appBarTheme.backgroundColor,
             elevation: 3,
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.only(
+                  right: 20, left: 20, top: 20, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Chattoapps",
+                    "ChattoApps",
                     style: TextStyle(
-                      fontSize: 30,
+                      color: Colors.white,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   IconButton(
                     onPressed: () => Get.toNamed(Routes.PROFILE),
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.blue[400],
+                      backgroundColor: Colors.blue[600],
                     ),
                     icon: const Icon(
                       Icons.person,
-                      size: 35,
+                      size: 28,
                       color: Colors.white,
                     ),
                   ),
@@ -73,9 +76,9 @@ class HomeView extends GetView<HomeController> {
                                     authC.user.value.email!,
                                     allChats[index]["connection"],
                                   ),
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.black26,
-                                    radius: 25,
+                                  leading: SizedBox(
+                                    width: 50,
+                                    height: 50,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: data!['photoUrl'] == 'noimage'
@@ -83,7 +86,7 @@ class HomeView extends GetView<HomeController> {
                                               "assets/logo/noimage.png",
                                               fit: BoxFit.cover,
                                             )
-                                          : Image.network( 
+                                          : Image.network(
                                               data['photoUrl'],
                                               fit: BoxFit.cover,
                                             ),

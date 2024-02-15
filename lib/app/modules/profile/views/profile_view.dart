@@ -1,4 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:chatapp/app/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +14,7 @@ class ProfileView extends GetView<ProfileController> {
     final authC = Get.find<AuthController>();
     return Scaffold(
       appBar: AppBar(
+        title: Text("Profile"),
         actions: [
           IconButton(
             onPressed: () {
@@ -29,6 +31,7 @@ class ProfileView extends GetView<ProfileController> {
       body: Column(
         children: [
           Container(
+            margin: EdgeInsets.only(top: 20),
             child: Column(
               children: [
                 AvatarGlow(
@@ -67,7 +70,6 @@ class ProfileView extends GetView<ProfileController> {
                       "${authC.user.value.email!}",
                       style: TextStyle(
                         fontSize: 20,
-                        color: Colors.black54,
                       ),
                     )),
               ],
@@ -77,25 +79,6 @@ class ProfileView extends GetView<ProfileController> {
             child: Container(
               child: Column(
                 children: [
-                  ListTile(
-                    onTap: () {
-                      Get.toNamed(Routes.UPDATE_STATUS);
-                    },
-                    leading: const Icon(
-                      Icons.note_add_outlined,
-                      size: 35,
-                    ),
-                    title: const Text(
-                      "Bio",
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_right,
-                      size: 50,
-                    ),
-                  ),
                   ListTile(
                     onTap: () {
                       Get.toNamed(Routes.CHANGE_PROFILE);
@@ -116,10 +99,9 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                   ListTile(
-                      onTap: () => Get.defaultDialog(
-                          title: "Uppssss....",
-                          middleText:
-                              "Fitur Belum Tersedia ,Fitur akan di selesaikan jika developernya sempat😉😊"),
+                      onTap: () {
+                        authC.mode.value = !authC.mode.value;
+                      },
                       leading: const Icon(
                         Icons.color_lens,
                         size: 35,
@@ -130,10 +112,10 @@ class ProfileView extends GetView<ProfileController> {
                           fontSize: 22,
                         ),
                       ),
-                      trailing: const Text(
-                        "Light",
-                        style: TextStyle(fontSize: 18),
-                      )),
+                      trailing: Obx(() => Text(
+                            authC.mode.isTrue ? "Dark" : "Light",
+                            style: TextStyle(fontSize: 18),
+                          ))),
                 ],
               ),
             ),
@@ -144,15 +126,9 @@ class ProfileView extends GetView<ProfileController> {
               children: [
                 Text(
                   "Chat App",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
                 ),
                 Text(
-                  "v.1.0",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
+                  "v.1.1.1",
                 ),
               ],
             ),
